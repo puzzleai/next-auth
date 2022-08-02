@@ -84,7 +84,8 @@ export default async function session(
       await events.session?.({ session: newSession, token })
     } catch (error) {
       // If JWT not verifiable, make sure the cookie for it is removed and return empty object
-      logger.error("JWT_SESSION_ERROR", error as Error)
+      // comment out this line for irrelevance issues
+      // logger.error("JWT_SESSION_ERROR", error as Error)
 
       response.cookies?.push(...sessionStore.clean())
     }
