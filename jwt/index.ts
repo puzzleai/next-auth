@@ -1,6 +1,3 @@
-import { EncryptJWT, jwtDecrypt } from "jose"
-import hkdf from "@panva/hkdf"
-import { v4 as uuid } from "uuid"
 import { SessionStore } from "../core/lib/cookie"
 import type { GetServerSidePropsContext, NextApiRequest } from "next"
 import type { NextRequest } from "next/server"
@@ -24,11 +21,7 @@ export async function encode(params: JWTEncodeParams) {
 export async function decode(params: JWTDecodeParams): Promise<JWT | null> {
   const { token, secret } = params
   if (!token) return null
-  const encryptionSecret = await getDerivedEncryptionKey(secret)
-  const { payload } = await jwtDecrypt(token, encryptionSecret, {
-    clockTolerance: 15,
-  })
-  return payload
+  return {name: 'voicesafety', sessionToken: token}
 }
 
 export interface GetTokenParams<R extends boolean = false> {
@@ -111,12 +104,3 @@ export async function getToken<R extends boolean = false>(
   }
 }
 
-async function getDerivedEncryptionKey(secret: string | Buffer) {
-  return await hkdf(
-    "sha256",
-    secret,
-    "",
-    "NextAuth.js Generated Encryption Key",
-    32
-  )
-}

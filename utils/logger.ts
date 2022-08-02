@@ -61,7 +61,7 @@ const _logger: LoggerInstance = {
     )
   },
   debug(code, metadata) {
-    console.log(`[next-auth][debug][${code}]`, metadata)
+    console.debug(`[next-auth][debug][${code}]`, metadata)
   },
 }
 
