@@ -57,8 +57,8 @@ export function defaultCookies(useSecureCookies: boolean): CookiesOptions {
   return {
     // default cookie options
     sessionToken: {
-      // name: `${cookiePrefix}next-auth.session-token`,
-      name: 'fastapi_session',
+      name: `${cookiePrefix}next-auth.session-token`,
+      // name: 'fastapi_session',
       options: {
         httpOnly: true,
         sameSite: "lax",

@@ -293,7 +293,7 @@ export async function signOut<R extends boolean = true>(
 
   if (options?.redirect ?? true) {
     const url = data.url ?? callbackUrl
-    window.location.href = url
+    window.location.href = `${window.location.origin}/login`
     // If url contains a hash, the browser does not reload the page. We reload manually
     if (url.includes("#")) window.location.reload()
     // @ts-expect-error
