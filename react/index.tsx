@@ -173,7 +173,7 @@ export async function getProviders() {
  * [Documentation](https://next-auth.js.org/getting-started/client#signin)
  */
 export async function signIn<
-  P extends RedirectableProviderType | undefined = undefined
+  P extends RedirectableProviderType
 >(
   provider?: LiteralUnion<
     P extends RedirectableProviderType
@@ -183,7 +183,7 @@ export async function signIn<
   options?: SignInOptions,
   authorizationParams?: SignInAuthorizationParams
 ): Promise<
-  P extends RedirectableProviderType ? SignInResponse | undefined : undefined
+  SignInResponse
 > {
   const { callbackUrl = window.location.href, redirect = true } = options ?? {}
 
@@ -192,14 +192,22 @@ export async function signIn<
 
   if (!providers) {
     window.location.href = `${baseUrl}/error`
-    return
+    return {  error: undefined,
+      status: 400,
+      ok: false,
+      url: null
+    }
   }
 
   if (!provider || !(provider in providers)) {
     window.location.href = `${baseUrl}/signin?${new URLSearchParams({
       callbackUrl,
     })}`
-    return
+    return {  error: undefined,
+      status: 400,
+      ok: false,
+      url: null
+    } 
   }
 
   const isCredentials = providers[provider].type === "credentials"
@@ -234,7 +242,11 @@ export async function signIn<
     window.location.href = url
     // If url contains a hash, the browser does not reload the page. We reload manually
     if (url.includes("#")) window.location.reload()
-    return
+    return {  error: undefined,
+      status: 400,
+      ok: false,
+      url: null
+    }
   }
 
   const error = new URL(data.url).searchParams.get("error")
