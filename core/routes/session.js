@@ -1,15 +1,15 @@
 import { fromDate } from "../lib/utils"
 
-import type { Adapter } from "../../adapters"
-import type { InternalOptions } from "../types"
-import type { OutgoingResponse } from ".."
-import type { Session } from "../.."
-import type { SessionStore } from "../lib/cookie"
+// import type { Adapter } from "../../adapters"
+// import type { InternalOptions } from "../types"
+// import type { OutgoingResponse } from ".."
+// import type { Session } from "../.."
+// import type { SessionStore } from "../lib/cookie"
 
-interface SessionParams {
-  options: InternalOptions
-  sessionStore: SessionStore
-}
+// interface SessionParams {
+//   options: InternalOptions
+//   sessionStore: SessionStore
+// }
 
 /**
  * Return a session object (without any private fields)
@@ -17,8 +17,8 @@ interface SessionParams {
  */
 
 export default async function session(
-  params: SessionParams
-): Promise<OutgoingResponse<Session | {}>> {
+  params
+) {
   const { options, sessionStore } = params
   const {
     adapter,
@@ -29,7 +29,7 @@ export default async function session(
     session: { strategy: sessionStrategy, maxAge: sessionMaxAge },
   } = options
 
-  const response: OutgoingResponse<Session | {}> = {
+  const response = {
     body: {},
     headers: [{ key: "Content-Type", value: "application/json" }],
     cookies: [],
@@ -75,9 +75,10 @@ export default async function session(
       })
 
       // Set cookie, to also update expiry date on cookie
-      const sessionCookies = sessionStore.chunk(newToken, {
-        expires: newExpires,
-      })
+      const sessionCookies = sessionStore.chunk(newToken)
+      // , {
+      //   expires: newExpires,
+      // })
 
       response.cookies?.push(...sessionCookies)
 
@@ -87,12 +88,12 @@ export default async function session(
       // comment out this line for irrelevance issues
       // logger.error("JWT_SESSION_ERROR", error as Error)
 
-      response.cookies?.push(...sessionStore.clean())
+      response.cookies?.push([...sessionStore.clean()])
     }
   } else {
     try {
       const { getSessionAndUser, deleteSession, updateSession } =
-        adapter as Adapter
+        adapter 
       let userAndSession = await getSessionAndUser(sessionToken)
 
       // If session has expired, clean up the database
@@ -160,7 +161,7 @@ export default async function session(
         response.cookies?.push(...sessionStore.clean())
       }
     } catch (error) {
-      logger.error("SESSION_ERROR", error as Error)
+      logger.error("SESSION_ERROR", error )
     }
   }
 

@@ -114,9 +114,9 @@ export interface Cookie extends CookieOption {
 type Chunks = Record<string, string>
 
 export class SessionStore {
-  #chunks: Chunks = {}
-  #option: CookieOption
-  #logger: LoggerInstance | Console
+  chunks: Chunks = {}
+  option: CookieOption
+  logger: LoggerInstance | Console
 
   constructor(
     option: CookieOption,
@@ -126,33 +126,33 @@ export class SessionStore {
     },
     logger: LoggerInstance | Console
   ) {
-    this.#logger = logger
-    this.#option = option
+    this.logger = logger
+    this.option = option
 
     const { cookies } = req
     const { name: cookieName } = option
 
     if (cookies instanceof Map) {
       for (const name of cookies.keys()) {
-        if (name.startsWith(cookieName)) this.#chunks[name] = cookies.get(name)
+        if (name.startsWith(cookieName)) this.chunks[name] = cookies.get(name)
       }
     } else {
       for (const name in cookies) {
-        if (name.startsWith(cookieName)) this.#chunks[name] = cookies[name]
+        // if (name.startsWith(cookieName)) this.chunks[name] = cookies[name]
       }
     }
   }
 
   get value() {
-    return Object.values(this.#chunks)?.join("")
+    return Object.values(this.chunks)?.join("")
   }
 
   /** Given a cookie, return a list of cookies, chunked to fit the allowed cookie size. */
-  #chunk(cookie: Cookie): Cookie[] {
+  chunk(cookie: Cookie): Cookie[] {
     const chunkCount = Math.ceil(cookie.value.length / CHUNK_SIZE)
 
     if (chunkCount === 1) {
-      this.#chunks[cookie.name] = cookie.value
+      this.chunks[cookie.name] = cookie.value
       return [cookie]
     }
 
@@ -161,10 +161,10 @@ export class SessionStore {
       const name = `${cookie.name}.${i}`
       const value = cookie.value.substr(i * CHUNK_SIZE, CHUNK_SIZE)
       cookies.push({ ...cookie, name, value })
-      this.#chunks[name] = value
+      this.chunks[name] = value
     }
 
-    this.#logger.debug("CHUNKING_SESSION_COOKIE", {
+    this.logger.debug("CHUNKING_SESSION_COOKIE", {
       message: `Session cookie exceeds allowed ${ALLOWED_COOKIE_SIZE} bytes.`,
       emptyCookieSize: ESTIMATED_EMPTY_COOKIE_SIZE,
       valueSize: cookie.value.length,
@@ -175,14 +175,14 @@ export class SessionStore {
   }
 
   /** Returns cleaned cookie chunks. */
-  #clean(): Record<string, Cookie> {
+  clean(): Record<string, Cookie> {
     const cleanedChunks: Record<string, Cookie> = {}
-    for (const name in this.#chunks) {
-      delete this.#chunks?.[name]
+    for (const name in this.chunks) {
+      delete this.chunks?.[name]
       cleanedChunks[name] = {
         name,
         value: "",
-        options: { ...this.#option.options, maxAge: 0 },
+        options: { ...this.option.options, maxAge: 0 },
       }
     }
     return cleanedChunks
@@ -193,27 +193,27 @@ export class SessionStore {
    * If the cookie has changed from chunked to unchunked or vice versa,
    * it deletes the old cookies as well.
    */
-  chunk(value: string, options: Partial<Cookie["options"]>): Cookie[] {
-    // Assume all cookies should be cleaned by default
-    const cookies: Record<string, Cookie> = this.#clean()
+  // chunk(value: string, options: Partial<Cookie["options"]>): Cookie[] {
+  //   // Assume all cookies should be cleaned by default
+  //   const cookies: Record<string, Cookie> = this.clean()
 
-    // Calculate new chunks
-    const chunked = this.#chunk({
-      name: this.#option.name,
-      value,
-      options: { ...this.#option.options, ...options },
-    })
+  //   // Calculate new chunks
+  //   const chunked = this.chunk({
+  //     name: this.option.name,
+  //     value,
+  //     options: { ...this.option.options, ...options },
+  //   })
 
-    // Update stored chunks / cookies
-    for (const chunk of chunked) {
-      cookies[chunk.name] = chunk
-    }
+  //   // Update stored chunks / cookies
+  //   for (const chunk of chunked) {
+  //     cookies[chunk.name] = chunk
+  //   }
 
-    return Object.values(cookies)
-  }
+  //   return Object.values(cookies)
+  // }
 
   /** Returns a list of cookies that should be cleaned. */
-  clean(): Cookie[] {
-    return Object.values(this.#clean())
-  }
+  // clean(): Cookie[] {
+  //   return Object.values(this.clean())
+  // }
 }

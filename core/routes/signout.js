@@ -1,13 +1,10 @@
-import type { Adapter } from "../../adapters"
-import type { InternalOptions } from "../types"
-import type { OutgoingResponse } from ".."
-import type { SessionStore } from "../lib/cookie"
+// import type { Adapter } from "../../adapters"
+// import type { InternalOptions } from "../types"
+// import type { OutgoingResponse } from ".."
+// import type { Cookie, SessionStore } from "../lib/cookie"
 
 /** Handle requests to /api/auth/signout */
-export default async function signout(params: {
-  options: InternalOptions
-  sessionStore: SessionStore
-}): Promise<OutgoingResponse> {
+export default async function signout(params) {
   const { options, sessionStore } = params
   const { adapter, events, jwt, callbackUrl, logger, session } = options
 
@@ -28,13 +25,13 @@ export default async function signout(params: {
     }
   } else {
     try {
-      const session = await (adapter as Adapter).deleteSession(sessionToken)
+      const session = await (adapter).deleteSession(sessionToken)
       // Dispatch signout event
       // @ts-expect-error
       await events.signOut?.({ session })
     } catch (error) {
       // If error, log it but continue
-      logger.error("SIGNOUT_ERROR", error as Error)
+      logger.error("SIGNOUT_ERROR", error)
     }
   }
 

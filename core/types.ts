@@ -3,8 +3,6 @@ import type {
   Provider,
   CredentialInput,
   ProviderType,
-  OAuthConfig,
-  EmailConfig,
   CredentialsConfig,
 } from "../providers"
 import type { TokenSetParameters } from "openid-client"
@@ -491,11 +489,7 @@ export interface User extends Record<string, unknown>, DefaultUser {}
 // Below are types that are only supposed be used by next-auth internally
 
 /** @internal */
-export type InternalProvider<T extends ProviderType = any> = (T extends "oauth"
-  ? OAuthConfig<any>
-  : T extends "email"
-  ? EmailConfig
-  : T extends "credentials"
+export type InternalProvider<T extends ProviderType = any> = (T extends "credentials"
   ? CredentialsConfig
   : never) & {
   signinUrl: string

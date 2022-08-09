@@ -37,10 +37,7 @@ export default function SigninPage(props: SignInServerPageParams) {
   } = props
   // We only want to render providers
   const providersToRender = providers.filter((provider) => {
-    if (provider.type === "oauth" || provider.type === "email") {
-      // Always render oauth and email type providers
-      return true
-    } else if (provider.type === "credentials" && provider.credentials) {
+    if (provider.type === "credentials" && provider.credentials) {
       // Only render credentials type provider if credentials are defined
       return true
     }
@@ -95,42 +92,9 @@ export default function SigninPage(props: SignInServerPageParams) {
         )}
         {providersToRender.map((provider, i: number) => (
           <div key={provider.id} className="provider">
-            {provider.type === "oauth" && (
-              <form action={provider.signinUrl} method="POST">
-                <input type="hidden" name="csrfToken" value={csrfToken} />
-                {callbackUrl && (
-                  <input type="hidden" name="callbackUrl" value={callbackUrl} />
-                )}
-                <button type="submit" className="button">
-                  Sign in with {provider.name}
-                </button>
-              </form>
-            )}
-            {(provider.type === "email" || provider.type === "credentials") &&
+            {(provider.type === "credentials") &&
               i > 0 &&
-              providersToRender[i - 1].type !== "email" &&
               providersToRender[i - 1].type !== "credentials" && <hr />}
-            {provider.type === "email" && (
-              <form action={provider.signinUrl} method="POST">
-                <input type="hidden" name="csrfToken" value={csrfToken} />
-                <label
-                  className="section-header"
-                  htmlFor={`input-email-for-${provider.id}-provider`}
-                >
-                  Email
-                </label>
-                <input
-                  id={`input-email-for-${provider.id}-provider`}
-                  autoFocus
-                  type="email"
-                  name="email"
-                  value={email}
-                  placeholder="email@example.com"
-                  required
-                />
-                <button type="submit">Sign in with {provider.name}</button>
-              </form>
-            )}
             {provider.type === "credentials" && (
               <form action={provider.callbackUrl} method="POST">
                 <input type="hidden" name="csrfToken" value={csrfToken} />
@@ -158,7 +122,7 @@ export default function SigninPage(props: SignInServerPageParams) {
                 <button type="submit">Sign in with {provider.name}</button>
               </form>
             )}
-            {(provider.type === "email" || provider.type === "credentials") &&
+            {(provider.type === "credentials") &&
               i + 1 < providersToRender.length && <hr />}
           </div>
         ))}
