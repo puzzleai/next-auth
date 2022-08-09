@@ -1,3 +1,4 @@
+import { Cookie } from "next-auth/core/lib/cookie"
 import type { Awaitable } from ".."
 
 export interface DefaultJWT extends Record<string, unknown> {
@@ -12,7 +13,9 @@ export interface DefaultJWT extends Record<string, unknown> {
  *
  * [`jwt` callback](https://next-auth.js.org/configuration/callbacks#jwt-callback) | [`getToken`](https://next-auth.js.org/tutorials/securing-pages-and-api-routes#using-gettoken)
  */
-export interface JWT extends Record<string, unknown>, DefaultJWT {}
+export interface JWT extends Record<string, unknown>, DefaultJWT {
+  sessionToken? : string;
+}
 
 export interface JWTEncodeParams {
   /** The JWT payload. */
@@ -46,7 +49,7 @@ export interface JWTOptions {
    */
   maxAge: number
   /** Override this method to control the NextAuth.js issued JWT encoding. */
-  encode: (params: JWTEncodeParams) => Awaitable<string>
+  encode: (params: JWTEncodeParams) => Promise<string>
   /** Override this method to control the NextAuth.js issued JWT decoding. */
   decode: (params: JWTDecodeParams) => Awaitable<JWT | null>
 }

@@ -13,16 +13,6 @@ export function fromDate(time: number, date = Date.now()) {
   return new Date(date + time * 1000)
 }
 
-export function hashToken(token: string, options: InternalOptions<"email">) {
-  const { provider, secret } = options
-  return (
-    createHash("sha256")
-      // Prefer provider specific secret, but use default secret if none specified
-      .update(`${token}${provider.secret ?? secret}`)
-      .digest("hex")
-  )
-}
-
 /**
  * Secret used salt cookies and tokens (e.g. for CSRF protection).
  * If no secret option is specified then it creates one on the fly
