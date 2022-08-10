@@ -20,8 +20,12 @@ export default function parseProviders(params: {
 
   const providers = params.providers.map(({ options, ...rest }) => {
     const defaultOptions = normalizeProvider(rest as Provider)
+    const userOptions = normalizeProvider(options as Provider)
 
     return merge(defaultOptions, {
+      ...userOptions,
+      signinUrl: `${url}/signin/${userOptions?.id ?? rest.id}`,
+      callbackUrl: `${url}/callback/${userOptions?.id ?? rest.id}`,
     })
   })
 
@@ -53,5 +57,17 @@ function normalizeProvider(provider?: Provider) {
     // eslint-disable-next-line @typescript-eslint/prefer-reduce-type-parameter, @typescript-eslint/consistent-type-assertions
   }, {} as any)
 
+  if (normalized.type === "oauth" && !normalized.version?.startsWith("1.")) {
+    // If provider has as an "openid-configuration" well-known endpoint
+    // or an "openid" scope request, it will also likely be able to receive an `id_token`
+    normalized.idToken = Boolean(
+      normalized.idToken ??
+        normalized.wellKnown?.includes("openid-configuration") ??
+        // @ts-expect-error
+        normalized.authorization?.params?.scope?.includes("openid")
+    )
+
+    if (!normalized.checks) normalized.checks = ["state"]
+  }
   return normalized
 }

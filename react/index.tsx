@@ -211,7 +211,7 @@ export async function signIn<
   }
 
   const isCredentials = providers[provider].type === "credentials"
-  const isEmail = false;
+  const isEmail = providers[provider].type === "email"
   const isSupportingReturn = isCredentials || isEmail
 
   const signInUrl = `${baseUrl}/${

@@ -183,7 +183,7 @@ export async function NextAuthHandler<
             sessionStore,
           })
           if (callback.cookies) cookies.push(...callback.cookies)
-          return { ...callback, cookies } as OutgoingResponse
+          return { ...callback, cookies }
         }
         break
       case "verify-request":
@@ -230,6 +230,7 @@ export async function NextAuthHandler<
           const signin = await routes.signin({
             query: req.query,
             body: req.body,
+            options,
           })
           if (signin.cookies) cookies.push(...signin.cookies)
           return { ...signin, cookies }
@@ -264,7 +265,7 @@ export async function NextAuthHandler<
             sessionStore,
           })
           if (callback.cookies) cookies.push(...callback.cookies)
-          return { ...callback, cookies } as OutgoingResponse
+          return { ...callback, cookies }
         }
         break
       case "_log":
