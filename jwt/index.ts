@@ -14,7 +14,7 @@ const now = () => (Date.now() / 1000) | 0
 export async function encode(params: JWTEncodeParams) {
   const { token = {}, secret, maxAge = DEFAULT_MAX_AGE } = params
   // const encryptionSecret = await getDerivedEncryptionKey(secret)
-  return token.sessionToken || ''
+  return token.sessionToken
 }
 
 /** Decodes a NextAuth.js issued JWT. */
