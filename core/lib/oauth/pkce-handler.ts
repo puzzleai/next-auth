@@ -48,6 +48,7 @@ export async function createPKCE(options: InternalOptions<"oauth">): Promise<
     code_challenge_method: PKCE_CODE_CHALLENGE_METHOD,
     cookie: {
       name: cookies.pkceCodeVerifier.name,
+      //@ts-ignore
       value: encryptedCodeVerifier,
       options: { ...cookies.pkceCodeVerifier.options, expires },
     },

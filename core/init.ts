@@ -92,6 +92,7 @@ export async function init({
     jwt: {
       secret, // Use application secret if no keys specified
       maxAge, // same as session maxAge,
+      //@ts-ignore
       encode: jwt.encode,
       decode: jwt.decode,
       ...userOptions.jwt,

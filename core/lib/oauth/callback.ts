@@ -1,6 +1,6 @@
 import { TokenSet } from "openid-client"
 import { openidClient } from "./client"
-import { oAuth1Client } from "./client-legacy"
+// import { oAuth1Client } from "./client-legacy"
 import { useState } from "./state-handler"
 import { usePKCECodeVerifier } from "./pkce-handler"
 import { OAuthCallbackError } from "../../errors"
@@ -34,35 +34,34 @@ export default async function oAuthCallback(params: {
     throw error
   }
 
-  if (provider.version?.startsWith("1.")) {
-    try {
-      const client = await oAuth1Client(options)
-      // Handle OAuth v1.x
-      const { oauth_token, oauth_verifier } = query ?? {}
-      // @ts-expect-error
-      const tokens: TokenSet = await client.getOAuthAccessToken(
-        oauth_token as string,
-        // @ts-expect-error
-        null,
-        oauth_verifier
-      )
-      // @ts-expect-error
-      let profile: Profile = await client.get(
-        (provider as any).profileUrl,
-        tokens.oauth_token,
-        tokens.oauth_token_secret
-      )
+  // if (provider.version?.startsWith("1.")) {
+  //   try {
+  //     const client = await oAuth1Client(options)
+  //     // Handle OAuth v1.x
+  //     const { oauth_token, oauth_verifier } = query ?? {}
 
-      if (typeof profile === "string") {
-        profile = JSON.parse(profile)
-      }
+  //     const tokens: TokenSet = await client.getOAuthAccessToken(
+  //       oauth_token as string,
+  //       null,
+  //       oauth_verifier
+  //     )
 
-      return await getProfile({ profile, tokens, provider, logger })
-    } catch (error) {
-      logger.error("OAUTH_V1_GET_ACCESS_TOKEN_ERROR", error as Error)
-      throw error
-    }
-  }
+  //     let profile: Profile = await client.get(
+  //       (provider as any).profileUrl,
+  //       tokens.oauth_token,
+  //       tokens.oauth_token_secret
+  //     )
+
+  //     if (typeof profile === "string") {
+  //       profile = JSON.parse(profile)
+  //     }
+
+  //     return await getProfile({ profile, tokens, provider, logger })
+  //   } catch (error) {
+  //     logger.error("OAUTH_V1_GET_ACCESS_TOKEN_ERROR", error as Error)
+  //     throw error
+  //   }
+  // }
 
   try {
     const client = await openidClient(options)

@@ -1,6 +1,5 @@
-import type { OAuthConfig, OAuthProvider, OAuthProviderType } from "./oauth"
+import type { OAuthConfig, OAuthProvider } from "./oauth"
 
-import type { EmailConfig, EmailProvider, EmailProviderType } from "./email"
 
 import type {
   CredentialsConfig,
@@ -9,7 +8,6 @@ import type {
 } from "./credentials"
 
 export * from "./oauth"
-export * from "./email"
 export * from "./credentials"
 
 export type ProviderType = "oauth" | "email" | "credentials"
@@ -21,11 +19,9 @@ export interface CommonProviderOptions {
   options?: Record<string, unknown>
 }
 
-export type Provider = OAuthConfig<any> | EmailConfig | CredentialsConfig
+export type Provider = OAuthConfig<any>  | CredentialsConfig
 
-export type BuiltInProviders = Record<OAuthProviderType, OAuthProvider> &
-  Record<CredentialsProviderType, CredentialsProvider> &
-  Record<EmailProviderType, EmailProvider>
+export type BuiltInProviders = Record<CredentialsProviderType, CredentialsProvider> 
 
 export type AppProviders = Array<
   Provider | ReturnType<BuiltInProviders[keyof BuiltInProviders]>
@@ -38,4 +34,4 @@ export interface AppProvider extends CommonProviderOptions {
 
 export type RedirectableProviderType = "email" | "credentials"
 
-export type BuiltInProviderType = RedirectableProviderType | OAuthProviderType
+export type BuiltInProviderType = RedirectableProviderType

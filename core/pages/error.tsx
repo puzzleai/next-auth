@@ -85,6 +85,7 @@ export default function ErrorPage(props: ErrorProps) {
   }
 
   const { status, heading, message, signin } =
+  //@ts-ignore
     errors[error.toLowerCase()] ?? errors.default
 
   return {

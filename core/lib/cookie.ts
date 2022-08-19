@@ -114,8 +114,11 @@ export interface Cookie extends CookieOption {
 type Chunks = Record<string, string>
 
 export class SessionStore {
+  //@ts-ignore
   #chunks: Chunks = {}
+  //@ts-ignore
   #option: CookieOption
+  //@ts-ignore
   #logger: LoggerInstance | Console
 
   constructor(
@@ -133,11 +136,13 @@ export class SessionStore {
     const { name: cookieName } = option
 
     if (cookies instanceof Map) {
+      //@ts-ignore
       for (const name of cookies.keys()) {
         if (name.startsWith(cookieName)) this.#chunks[name] = cookies.get(name)
       }
     } else {
       for (const name in cookies) {
+        //@ts-ignore
         if (name.startsWith(cookieName)) this.#chunks[name] = cookies[name]
       }
     }
@@ -148,6 +153,7 @@ export class SessionStore {
   }
 
   /** Given a cookie, return a list of cookies, chunked to fit the allowed cookie size. */
+  //@ts-ignore
   #chunk(cookie: Cookie): Cookie[] {
     const chunkCount = Math.ceil(cookie.value.length / CHUNK_SIZE)
 
@@ -175,6 +181,7 @@ export class SessionStore {
   }
 
   /** Returns cleaned cookie chunks. */
+  //@ts-ignore
   #clean(): Record<string, Cookie> {
     const cleanedChunks: Record<string, Cookie> = {}
     for (const name in this.#chunks) {

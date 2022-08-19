@@ -18,6 +18,7 @@ export function hashToken(token: string, options: InternalOptions<"email">) {
   return (
     createHash("sha256")
       // Prefer provider specific secret, but use default secret if none specified
+      //@ts-ignore
       .update(`${token}${provider.secret ?? secret}`)
       .digest("hex")
   )

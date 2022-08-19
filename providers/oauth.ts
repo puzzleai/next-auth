@@ -15,7 +15,7 @@ import type { JWK } from "jose"
 
 type Client = InstanceType<Issuer["Client"]>
 
-export type { OAuthProviderType } from "./oauth-types"
+// export type { OAuthProviderType } from "./oauth-types"
 
 type ChecksType = "pkce" | "state" | "none"
 

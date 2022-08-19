@@ -4,7 +4,6 @@ import type {
   CredentialInput,
   ProviderType,
   OAuthConfig,
-  EmailConfig,
   CredentialsConfig,
 } from "../providers"
 import type { TokenSetParameters } from "openid-client"
@@ -493,8 +492,6 @@ export interface User extends Record<string, unknown>, DefaultUser {}
 /** @internal */
 export type InternalProvider<T extends ProviderType = any> = (T extends "oauth"
   ? OAuthConfig<any>
-  : T extends "email"
-  ? EmailConfig
   : T extends "credentials"
   ? CredentialsConfig
   : never) & {

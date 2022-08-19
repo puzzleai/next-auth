@@ -1,5 +1,5 @@
 import { openidClient } from "./client"
-import { oAuth1Client } from "./client-legacy"
+// import { oAuth1Client } from "./client-legacy"
 import { createState } from "./state-handler"
 import { createPKCE } from "./pkce-handler"
 
@@ -35,21 +35,21 @@ export default async function getAuthorizationUrl({
   params = { ...params, ...query }
 
   // Handle OAuth v1.x
-  if (provider.version?.startsWith("1.")) {
-    const client = oAuth1Client(options)
-    const tokens = (await client.getOAuthRequestToken(params)) as any
-    const url = `${
-      // @ts-expect-error
-      provider.authorization?.url ?? provider.authorization
-    }?${new URLSearchParams({
-      oauth_token: tokens.oauth_token,
-      oauth_token_secret: tokens.oauth_token_secret,
-      ...tokens.params,
-    })}`
+  // if (provider.version?.startsWith("1.")) {
+  //   const client = oAuth1Client(options)
+  //   const tokens = (await client.getOAuthRequestToken(params)) as any
+  //   const url = `${
+  //     // @ts-expect-error
+  //     provider.authorization?.url ?? provider.authorization
+  //   }?${new URLSearchParams({
+  //     oauth_token: tokens.oauth_token,
+  //     oauth_token_secret: tokens.oauth_token_secret,
+  //     ...tokens.params,
+  //   })}`
 
-    logger.debug("GET_AUTHORIZATION_URL", { url, provider })
-    return { redirect: url }
-  }
+  //   logger.debug("GET_AUTHORIZATION_URL", { url, provider })
+  //   return { redirect: url }
+  // }
 
   const client = await openidClient(options)
 

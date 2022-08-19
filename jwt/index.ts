@@ -58,6 +58,7 @@ export async function getToken<R extends boolean = false>(
 ): Promise<R extends true ? string : JWT | null> {
   const {
     req,
+    //@ts-ignore
     secureCookie = process.env.NEXTAUTH_URL?.startsWith("https://") ??
       !!process.env.VERCEL,
     cookieName = secureCookie

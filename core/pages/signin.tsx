@@ -37,7 +37,7 @@ export default function SigninPage(props: SignInServerPageParams) {
   } = props
   // We only want to render providers
   const providersToRender = providers.filter((provider) => {
-    if (provider.type === "oauth" || provider.type === "email") {
+    if (provider.type === "oauth") {
       // Always render oauth and email type providers
       return true
     } else if (provider.type === "credentials" && provider.credentials) {
@@ -106,31 +106,9 @@ export default function SigninPage(props: SignInServerPageParams) {
                 </button>
               </form>
             )}
-            {(provider.type === "email" || provider.type === "credentials") &&
+            {(provider.type === "credentials") &&
               i > 0 &&
-              providersToRender[i - 1].type !== "email" &&
               providersToRender[i - 1].type !== "credentials" && <hr />}
-            {provider.type === "email" && (
-              <form action={provider.signinUrl} method="POST">
-                <input type="hidden" name="csrfToken" value={csrfToken} />
-                <label
-                  className="section-header"
-                  htmlFor={`input-email-for-${provider.id}-provider`}
-                >
-                  Email
-                </label>
-                <input
-                  id={`input-email-for-${provider.id}-provider`}
-                  autoFocus
-                  type="email"
-                  name="email"
-                  value={email}
-                  placeholder="email@example.com"
-                  required
-                />
-                <button type="submit">Sign in with {provider.name}</button>
-              </form>
-            )}
             {provider.type === "credentials" && (
               <form action={provider.callbackUrl} method="POST">
                 <input type="hidden" name="csrfToken" value={csrfToken} />
@@ -158,7 +136,7 @@ export default function SigninPage(props: SignInServerPageParams) {
                 <button type="submit">Sign in with {provider.name}</button>
               </form>
             )}
-            {(provider.type === "email" || provider.type === "credentials") &&
+            {(provider.type === "credentials") &&
               i + 1 < providersToRender.length && <hr />}
           </div>
         ))}
