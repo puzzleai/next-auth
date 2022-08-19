@@ -1,6 +1,6 @@
 import { serialize } from "cookie"
 import { Cookie } from "../core/lib/cookie"
-
+//@ts-ignore
 export function setCookie(res, cookie: Cookie) {
   // Preserve any existing cookies that have already been set in the same session
   let setCookieHeader = res.getHeader("Set-Cookie") ?? []

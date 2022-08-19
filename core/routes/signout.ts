@@ -24,6 +24,7 @@ export default async function signout(params: {
       await events.signOut?.({ token: decodedJwt })
     } catch (error) {
       // Do nothing if decoding the JWT fails
+      //@ts-ignore
       logger.error("SIGNOUT_ERROR", error)
     }
   } else {

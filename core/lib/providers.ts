@@ -45,11 +45,13 @@ function normalizeProvider(provider?: Provider) {
       typeof value === "string"
     ) {
       const url = new URL(value)
+      //@ts-ignore
       acc[key] = {
         url: `${url.origin}${url.pathname}`,
         params: Object.fromEntries(url.searchParams ?? []),
       }
     } else {
+      //@ts-ignore
       acc[key] = value
     }
 
@@ -63,7 +65,7 @@ function normalizeProvider(provider?: Provider) {
     normalized.idToken = Boolean(
       normalized.idToken ??
         normalized.wellKnown?.includes("openid-configuration") ??
-        // @ts-expect-error
+        //@ts-ignore
         normalized.authorization?.params?.scope?.includes("openid")
     )
 

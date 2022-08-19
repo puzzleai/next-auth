@@ -13,20 +13,24 @@ export default async function email(
   const { url, adapter, provider, callbackUrl, theme } = options
   // Generate token
   const token =
+  //@ts-ignore
     (await provider.generateVerificationToken?.()) ??
     randomBytes(32).toString("hex")
 
   const ONE_DAY_IN_SECONDS = 86400
   const expires = new Date(
+    //@ts-ignore
     Date.now() + (provider.maxAge ?? ONE_DAY_IN_SECONDS) * 1000
   )
 
   // Generate a link with email, unhashed token and callback url
   const params = new URLSearchParams({ callbackUrl, token, email: identifier })
+  //@ts-ignore
   const _url = `${url}/callback/${provider.id}?${params}`
 
   await Promise.all([
     // Send to user
+    //@ts-ignore
     provider.sendVerificationRequest({
       identifier,
       token,
@@ -45,7 +49,9 @@ export default async function email(
   ])
 
   return `${url}/verify-request?${new URLSearchParams({
+    //@ts-ignore
     provider: provider.id,
+    //@ts-ignore
     type: provider.type,
   })}`
 }
